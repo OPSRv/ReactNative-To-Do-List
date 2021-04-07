@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { AppText } from "../components/ui/AppText";
 
 export const Todo = ({ todo, onRemove, onOpen }) => {
@@ -7,14 +7,15 @@ export const Todo = ({ todo, onRemove, onOpen }) => {
     <TouchableOpacity
       activeOpacity={0.5}
       onPress={() => onOpen(todo.id)}
-      onLongPress={() => onRemove(todo.id)}
+      onLongPress={onRemove.bind(null, todo.id)}
     >
       <View style={styles.todo}>
-        <AppText style={styles.title}>{todo.title}</AppText>
+        <AppText>{todo.title}</AppText>
       </View>
     </TouchableOpacity>
   );
 };
+
 const styles = StyleSheet.create({
   todo: {
     flexDirection: "row",

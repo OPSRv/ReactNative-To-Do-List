@@ -1,44 +1,70 @@
 import React from "react";
-import { View, StyleSheet, FlatList, Image } from "react-native";
+import { StyleSheet, View, FlatList, Image, Dimensions } from "react-native";
+import { useState, useEffect } from "react/cjs/react.development";
 import { AddTodo } from "../components/AddTodo";
 import { Todo } from "../components/Todo";
+import { THEME } from "../theme";
 
 export const MainScreen = ({ addTodo, todos, removeTodo, openTodo }) => {
+  const [deviceWidth, setDeviceWidth] = useState(
+    Dimensions.get("window").width - THEME.PADDING_HORIZONTAL * 2
+  );
+
+  useEffect(() => {
+    const update = () => {
+      const width =
+        Dimensions.get("window").width - THEME.PADDING_HORIZONTAL * 2;
+      setDeviceWidth(width);
+    };
+    Dimensions.addEventListener("change", update);
+
+    return () => {
+      Dimensions.removeEventListener("change", update);
+    };
+  });
+
   let content = (
-    <FlatList
-      keyExtractor={(item) => item.id}
-      data={todos}
-      renderItem={({ item }) => (
-        <Todo todo={item} onRemove={removeTodo} onOpen={openTodo} />
-      )}
-    />
+    <View
+      style={{
+        width: deviceWidth,
+      }}
+    >
+      <FlatList
+        keyExtractor={(item) => item.id.toString()}
+        data={todos}
+        renderItem={({ item }) => (
+          <Todo todo={item} onRemove={removeTodo} onOpen={openTodo} />
+        )}
+      />
+    </View>
   );
 
   if (todos.length === 0) {
     content = (
-      <View style={styles.imageWrap}>
-        <Image source={require("../img/Null-logo.png")} />
+      <View style={styles.imgWrap}>
+        <Image
+          style={styles.image}
+          source={require("../../assets/no-items.png")}
+        />
       </View>
     );
   }
 
   return (
     <View>
-      <View style={styles.input}>
-        <AddTodo onSubmit={addTodo} />
-      </View>
+      <AddTodo onSubmit={addTodo} />
+
       {content}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  input: { marginTop: 10 },
-  imageWrap: {
+  imgWrap: {
     alignItems: "center",
     justifyContent: "center",
-    height: 300,
     padding: 10,
+    height: 300,
   },
   image: {
     width: "100%",

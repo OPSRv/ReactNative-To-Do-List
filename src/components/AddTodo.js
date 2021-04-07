@@ -1,51 +1,62 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TextInput, Button, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Button,
+  Alert,
+  Keyboard,
+} from "react-native";
 import { THEME } from "../theme";
+import { Ionicons } from "@expo/vector-icons";
 
 export const AddTodo = ({ onSubmit }) => {
-  const [value, setValue] = useState([]);
+  const [value, setValue] = useState("");
 
   const pressHandler = () => {
     if (value.trim()) {
       onSubmit(value);
       setValue("");
+      Keyboard.dismiss();
     } else {
-      Alert.alert("Назва справи не може бути пустою");
+      Alert.alert("Название дела не может быть пустым");
     }
   };
 
   return (
-    <View style={style.block}>
+    <View style={styles.block}>
       <TextInput
-        style={style.input}
+        style={styles.input}
         onChangeText={setValue}
         value={value}
-        placeholder="Введіть назву справи"
-        autoCorrect={true}
+        placeholder="Введите название дела..."
+        autoCorrect={false}
         autoCapitalize="none"
-        keyboardType="default"
       />
-      <Button title="Додати" onPress={pressHandler} />
+      <Ionicons.Button
+        name="md-add-circle-outline"
+        size={24}
+        color="white"
+        onPress={pressHandler}
+      >
+        Добавить
+      </Ionicons.Button>
     </View>
   );
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   block: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 15,
   },
   input: {
     width: "70%",
+    padding: 10,
     borderStyle: "solid",
-    borderWidth: 1,
-    borderRadius: 25,
+    borderBottomWidth: 2,
     borderBottomColor: THEME.MAIN_COLOR,
-    borderTopColor: "black",
-    color: "black",
-    textAlign: "center",
-    fontWeight: "bold",
   },
 });

@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import {
   View,
-  TextInput,
   StyleSheet,
+  TextInput,
   Button,
   Modal,
   Alert,
 } from "react-native";
 import { THEME } from "../theme";
+import { AppButton } from "./ui/AppButtone";
 
 export const EditModal = ({ visible, onCancel, value, onSave }) => {
   const [title, setTitle] = useState(value);
@@ -15,41 +16,45 @@ export const EditModal = ({ visible, onCancel, value, onSave }) => {
   const saveHandler = () => {
     if (title.trim().length < 3) {
       Alert.alert(
-        "Помилка",
-        `Мінімальна довжина назви 3 символа, зараз ${
+        "Ошибка!",
+        `Минимальная длинна названия 3 символа. Сейчас ${
           title.trim().length
-        } символи`
+        } символов.`
       );
     } else {
       onSave(title);
     }
   };
+
   return (
-    <Modal visible={visible} animationType="slide">
+    <Modal visible={visible} animationType="slide" transparent={false}>
       <View style={styles.wrap}>
         <TextInput
           value={title}
           onChangeText={setTitle}
           style={styles.input}
-          placeholder={"Введіть назву"}
+          placeholder="Введите название"
           autoCapitalize="none"
           autoCorrect={false}
           maxLength={64}
         />
         <View style={styles.buttons}>
-          <Button
-            title="Відміна"
-            onPress={onCancel}
-            color={THEME.DANGER_COLOR}
-          />
-          <Button title="Зберегти" onPress={saveHandler} />
+          <AppButton onPress={onCancel} color={THEME.DANGER_COLOR}>
+            Отменить
+          </AppButton>
+          <AppButton onPress={onCancel}>Сохранить</AppButton>
         </View>
       </View>
     </Modal>
   );
 };
+
 const styles = StyleSheet.create({
-  wrap: { justifyContent: "center", alignItems: "center", flex: 1 },
+  wrap: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   input: {
     padding: 10,
     borderBottomColor: THEME.MAIN_COLOR,
